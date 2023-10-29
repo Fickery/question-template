@@ -1,0 +1,236 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/*------------ UTILITIES ------------*/
+
+#root {
+  font-family: "Poppins", sans-serif;
+  margin: 0 auto;
+  text-align: center;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@mixin darkred {
+  color: #ef3d32;
+}
+
+@mixin lightred {
+  color: #ebe6df;
+}
+
+@mixin yellow {
+  color: #e5c57a;
+}
+
+@mixin darkred-bg {
+  @include lightred;
+  background: #e74234;
+}
+
+@mixin lightred-bg {
+  @include darkred();
+  background: #ebe6df;
+}
+
+@mixin yellow-bg {
+  @include darkred();
+  background: #e5c57a;
+}
+
+/*------------ UTILITIES ------------*/
+/*------------ DIVIDER ------------*/
+
+.square-btn {
+  padding: 0.5em 0.5em;
+  border-radius: 10px;
+  border: 1px solid #ef3d32;
+  @include lightred-bg;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.1s ease-in-out;
+}
+
+.square-btn:hover {
+  @include yellow-bg();
+  @include darkred();
+}
+
+.square-btn:active {
+  @include yellow-bg;
+  border-radius: 50px;
+}
+
+.big-btn {
+  @include lightred-bg;
+  border: none;
+  width: 350px;
+  height: 43px;
+  font-weight: 700;
+  margin-top: 1em;
+  cursor: pointer;
+  transition: all 0.15s ease-in;
+}
+
+.big-btn:hover {
+  @include darkred-bg;
+}
+
+.small-btn {
+  width: 25%;
+  height: 100%;
+  padding: 0.5em 0.5em;
+
+  border: none;
+  @include lightred-bg;
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease-in;
+}
+
+.small-btn:hover {
+  background: #ef3d32;
+  color: #ebe6df;
+}
+
+.font-black40 {
+  @include darkred;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/*------------ UTILITIES ------------*/
+/*------------ DIVIDER ------------*/
+
+/*------------ MAIN CONTENT ------------*/
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 30vw;
+  min-height: 50vh;
+  border-radius: 15px;
+  border: 1px solid #ed3e34;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.header-cont {
+  @include lightred-bg;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.title {
+  @include darkred;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.progress-bar {
+  @include yellow-bg;
+  width: 100%;
+  height: 10px;
+}
+
+.question {
+  color: #000;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.question-hint {
+  color: #ed3e34;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.answer-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+}
+
+.answer-content {
+  display: flex;
+  align-items: center;
+  text-align: start;
+  min-width: 50%;
+  min-height: 3.5vh;
+  padding-left: 1em;
+  margin-bottom: 1em;
+  border-radius: 5px;
+  border: 1px solid #dcbd92;
+  cursor: pointer;
+  transition: all 0.05s ease-in-out;
+}
+
+.answer-content:hover {
+  background-color: #e5c57a;
+}
+
+.active {
+  background-color: #e5c57a;
+  border-radius: 50px;
+}
+
+.answer-choice {
+  color: #ed3e34;
+  font-family: Poppins;
+  font-size: 0.8rem;
+  font-weight: 900;
+  padding-right: 5px;
+}
+
+.answer {
+  color: #000;
+  font-family: Poppins;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.btn-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3em;
+  margin-bottom: 2em;
+}
+
+/*------------ MAIN CONTENT ------------*/
+
+.start-cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 30vw;
+  min-height: 50vh;
+}
+
+/*------------ STARTPAGE CONTENT ------------*/
