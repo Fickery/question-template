@@ -1,6 +1,7 @@
 import { useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLoaderData } from "react-router-dom";
 import { QuestionData, questionData } from "../data";
+import { Oval } from "react-loader-spinner";
 
 interface State {
   currQuestionIndex: number;
@@ -70,16 +71,18 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
+export async function loader() {
+  const question = await questionData;
+  return { questionData: question };
+}
+
 const QuestionPage = () => {
+  const loaderData = useLoaderData();
   let navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const currentQuestion: QuestionData | undefined =
     questionData[state.currQuestionIndex];
-
-  const handleEnd = () => {
-    navigate("/end", { state: { percentage: progressPercentage() } });
-  };
 
   const handleSelectAnswer = (index: number) => {
     dispatch({ type: "SELECT_ANSWER", payload: index });
@@ -116,10 +119,36 @@ const QuestionPage = () => {
     dispatch({ type: "SKIP_QUESTION" });
   };
 
+  const handleEnd = () => {
+    const confirmed = window.confirm("Are you sure you want to end the quiz?");
+    if (confirmed) {
+      navigate("/end", { state: { percentage: progressPercentage() } });
+    }
+  };
+
   if (!currentQuestion) {
     navigate("/end", { state: { percentage: progressPercentage() } });
     return null;
   } // if there is no current question, navigate to the end page
+
+  if (!loaderData) {
+    return (
+      <div className="loader">
+        <Oval
+          height={80}
+          width={80}
+          color="#4fa94d"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="#4fa94d"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="main">
@@ -149,7 +178,9 @@ const QuestionPage = () => {
       </div>
 
       <div className="question-content">
-        <p>{Math.round(progressPercentage())}%</p>
+        <p className="question-percentage">
+          {Math.round(progressPercentage())}%
+        </p>
         <p className="question">{currentQuestion.title}</p>
         <p
           className="question-hint"

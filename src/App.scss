@@ -43,6 +43,13 @@
   background: #e5c57a;
 }
 
+.loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 /*------------ UTILITIES ------------*/
 /*------------ DIVIDER ------------*/
 
@@ -199,6 +206,16 @@ button:disabled {
 .question-content {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.question-percentage {
+  @include lightred-bg();
+  font-size: 0.8rem;
+
+  margin: 0 auto;
+  border-radius: 5px;
+  max-width: 50px;
+  padding: 0.15rem;
 }
 
 .question-hint {

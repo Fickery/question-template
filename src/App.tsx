@@ -1,9 +1,13 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
 import "./App.scss";
 import Error from "./Error";
 import EndPage from "./components/EndPage";
-import QuestionPage from "./components/QuestionPage";
+import QuestionPage, {
+  loader as questionPageLoader,
+} from "./components/QuestionPage";
 import StartPage from "./components/StartPage";
+import { useEffect, useState } from "react";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +18,7 @@ const router = createBrowserRouter([
   {
     path: "/question",
     element: <QuestionPage />,
+    loader: questionPageLoader,
     errorElement: <Error />,
   },
   {
@@ -24,6 +29,34 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Emulate a 3-second loading delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="loader">
+        <p className="font-black40">...Please wait friend</p>
+        <Oval
+          height={90}
+          width={90}
+          color="#ef3d32"
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="#ef3d32"
+          strokeWidth={3}
+          strokeWidthSecondary={4}
+        />
+      </div>
+    );
+  }
   return <RouterProvider router={router} />;
 }
 
