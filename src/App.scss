@@ -46,6 +46,11 @@
 /*------------ UTILITIES ------------*/
 /*------------ DIVIDER ------------*/
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .square-btn {
   padding: 0.5em 0.5em;
   border-radius: 10px;
@@ -55,6 +60,7 @@
   font-family: Poppins;
   font-size: 1rem;
   font-weight: 700;
+  cursor: pointer;
   transition: all 0.1s ease-in-out;
 }
 
@@ -63,9 +69,9 @@
   @include darkred();
 }
 
-.square-btn:active {
+.activeHint {
   @include yellow-bg;
-  border-radius: 50px;
+  border-radius: 100px;
 }
 
 .big-btn {
@@ -147,17 +153,52 @@
   font-weight: 900;
 }
 
-.progress-bar {
-  @include yellow-bg;
+.progress-bar-cont {
+  box-shadow: -1px 6px 4px -6px rgb(228, 9, 9) inset;
   width: 100%;
-  height: 10px;
+  height: 8px;
 }
+
+/* CSS */
+.progress-bar {
+  appearance: button;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #f0e5b7, #f0c170);
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+  color: #482307;
+  column-gap: 1rem;
+  cursor: pointer;
+  margin: 0;
+  outline: 2px solid transparent;
+  text-align: center;
+  text-transform: none;
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  box-shadow: -6px 8px 10px rgba(81, 41, 10, 0.1),
+    0px 2px 2px rgba(81, 41, 10, 0.2);
+  height: 7px;
+  transition: width 1s ease-out;
+}
+
+// @media (min-width: 768px) {
+//   .progress-bar {
+//     padding: 1rem 2rem;
+//   }
+// }
 
 .question {
   color: #000;
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
+}
+
+.question-content {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .question-hint {
@@ -173,7 +214,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 1em;
+  padding: 0.5em;
 }
 
 .answer-content {
@@ -191,12 +232,11 @@
 }
 
 .answer-content:hover {
-  background-color: #e5c57a;
+  @include lightred-bg;
 }
 
 .active {
-  background-color: #e5c57a;
-  border-radius: 50px;
+  @include lightred-bg;
 }
 
 .answer-choice {
@@ -224,6 +264,10 @@
 
 /*------------ MAIN CONTENT ------------*/
 
+/*------------ DIVIDER ------------*/
+
+/*------------ STARTPAGE CONTENT ------------*/
+
 .start-cont {
   display: flex;
   flex-direction: column;
@@ -234,3 +278,19 @@
 }
 
 /*------------ STARTPAGE CONTENT ------------*/
+
+/*------------ DIVIDER ------------*/
+
+/*------------ ENDPAGE CONTENT ------------*/
+
+.percentage {
+  @include darkred-bg();
+  color: white;
+  padding: 0.25rem 1rem;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  border-radius: 50px;
+  width: 15rem;
+}
+
+/*------------ ENDPAGE CONTENT ------------*/

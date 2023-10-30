@@ -1,13 +1,20 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const StartPage = () => {
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    navigate("/question");
+    console.log("question page");
+  };
+
   return (
     <main>
       <div className="start-cont">
         <p className="font-black40">Question App</p>
-        <Link to="question" className="big-btn">
+        <button onClick={handleStart} className="big-btn">
           Start
-        </Link>
+        </button>
       </div>
     </main>
   );

@@ -1,71 +1,170 @@
-import { SetStateAction, useState } from "react";
-import { questionData } from "../data";
-import EndPage from "./EndPage";
+import { useReducer } from "react";
+import { useNavigate } from "react-router-dom";
+import { QuestionData, questionData } from "../data";
 
-interface QuestionData {
-  questionnumber: number;
-  title: string;
-  questionhint: string;
-  options: {
-    option: string;
-  }[];
-  correctIndex: number;
+interface State {
+  currQuestionIndex: number;
+  correctCount: number;
+  selectedAnswer: null | number;
+  isHintVisible: boolean;
+  isHintButtonActive: boolean;
+  isHintButtonClicked: boolean;
 }
 
+type Action =
+  | { type: "SELECT_ANSWER"; payload: number }
+  | { type: "NEXT_QUESTION" }
+  | { type: "TOGGLE_HINT_BUTTON" }
+  | { type: "SKIP_QUESTION" };
+
+const initialState: State = {
+  currQuestionIndex: 0,
+  correctCount: 0,
+  selectedAnswer: null,
+  isHintVisible: false,
+  isHintButtonActive: false,
+  isHintButtonClicked: false,
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "TOGGLE_HINT_BUTTON":
+      return {
+        ...state,
+        isHintVisible: !state.isHintVisible,
+        isHintButtonActive: !state.isHintButtonActive,
+        isHintButtonClicked: !state.isHintButtonClicked,
+      };
+    case "SELECT_ANSWER":
+      return {
+        ...state,
+        selectedAnswer: action.payload,
+      };
+    case "NEXT_QUESTION":
+      if (
+        state.selectedAnswer !== null &&
+        questionData[state.currQuestionIndex].options[state.selectedAnswer]
+          .isCorrect
+      ) {
+        return {
+          ...state,
+          correctCount: state.correctCount + 1,
+          selectedAnswer: null,
+          currQuestionIndex: state.currQuestionIndex + 1,
+        };
+      } else {
+        return {
+          ...state,
+          selectedAnswer: null,
+          currQuestionIndex: state.currQuestionIndex + 1,
+        };
+      }
+    case "SKIP_QUESTION":
+      return {
+        ...state,
+        selectedAnswer: null,
+        currQuestionIndex: state.currQuestionIndex + 1,
+      };
+    default:
+      return state;
+  }
+};
+
 const QuestionPage = () => {
-  const [currQuestionIndex, setCurrQuestionIndex] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
+  let navigate = useNavigate();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const currentQuestion: QuestionData = questionData[currQuestionIndex];
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const currentQuestion: QuestionData | undefined =
+    questionData[state.currQuestionIndex];
 
-  const handleSelectAnswer = (index: SetStateAction<null>) => {
-    setSelectedAnswer(index);
+  const handleEnd = () => {
+    navigate("/end", { state: { percentage: progressPercentage() } });
+  };
+
+  const handleSelectAnswer = (index: number) => {
+    dispatch({ type: "SELECT_ANSWER", payload: index });
+  };
+
+  const progressPercentage = () => {
+    const totalCount = questionData.length;
+
+    if (state.currQuestionIndex === totalCount - 1) {
+      if (
+        state.selectedAnswer !== null &&
+        questionData[state.currQuestionIndex].options[state.selectedAnswer]
+          .isCorrect
+      ) {
+        return ((state.correctCount + 1) / totalCount) * 100;
+      } else {
+        return (state.correctCount / totalCount) * 100;
+      }
+    } else {
+      return (state.correctCount / totalCount) * 100;
+    }
   };
 
   const handleNextQuestion = () => {
-    if (
-      selectedAnswer !== null &&
-      selectedAnswer === currentQuestion.correctIndex
-    ) {
-      setCorrectCount(correctCount + 1);
-    }
-
-    setSelectedAnswer(null);
-
-    if (currQuestionIndex < questionData.length - 1) {
-      setCurrQuestionIndex(currQuestionIndex + 1);
+    console.log(currentQuestion);
+    if (state.currQuestionIndex === questionData.length - 1) {
+      navigate("/end", { state: { percentage: progressPercentage() } });
+    } else {
+      dispatch({ type: "NEXT_QUESTION" });
     }
   };
 
-  if (currQuestionIndex >= questionData.length) {
-    return (
-      <EndPage
-        correctCount={correctCount}
-        totalQuestions={questionData.length}
-      />
-    );
-  }
+  const handleSkip = () => {
+    dispatch({ type: "SKIP_QUESTION" });
+  };
+
+  if (!currentQuestion) {
+    navigate("/end", { state: { percentage: progressPercentage() } });
+    return null;
+  } // if there is no current question, navigate to the end page
 
   return (
     <div className="main">
       <div className="header-cont">
         <div className="header">
-          <button className="square-btn">Hint</button>
+          <button
+            className={`square-btn ${
+              state.isHintButtonActive ? "activeHint" : ""
+            }`}
+            onClick={() => {
+              dispatch({ type: "TOGGLE_HINT_BUTTON" });
+            }}
+          >
+            Hint
+          </button>
           <p className="title">{currentQuestion.questionnumber}</p>
-          <button className="square-btn">End</button>
+          <button className="square-btn" onClick={handleEnd}>
+            End
+          </button>
         </div>
-        <div className="progress-bar"></div>
+        <div className="progress-bar-cont">
+          <div
+            className="progress-bar"
+            style={{ width: `${progressPercentage()}%` }}
+          ></div>
+        </div>
       </div>
 
       <div className="question-content">
+        <p>{Math.round(progressPercentage())}%</p>
         <p className="question">{currentQuestion.title}</p>
-        <p className="question-hint">*{currentQuestion.questionhint}</p>
+        <p
+          className="question-hint"
+          style={{
+            opacity: state.isHintVisible && state.isHintButtonClicked ? 1 : 0,
+            transition: "opacity 0.25s",
+          }}
+        >
+          *{currentQuestion.questionhint}
+        </p>
         <ul className="answer-main">
           {currentQuestion.options.map((option, i) => (
             <li
               className={`answer-content ${
-                selectedAnswer === i ? "active" : ""
+                state.selectedAnswer === i ? "active" : ""
               }`}
               key={i}
               onClick={() => handleSelectAnswer(i)}
@@ -80,10 +179,14 @@ const QuestionPage = () => {
       </div>
 
       <div className="btn-content">
-        <button className="small-btn" onClick={() => handleNextQuestion()}>
+        <button className="small-btn" onClick={() => handleSkip()}>
           Skip
         </button>
-        <button className="small-btn" onClick={() => handleNextQuestion()}>
+        <button
+          className="small-btn"
+          onClick={() => handleNextQuestion()}
+          disabled={state.selectedAnswer === null}
+        >
           Submit
         </button>
       </div>
